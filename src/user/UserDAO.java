@@ -12,10 +12,10 @@ public class UserDAO {
 	
 	public UserDAO() {
 		try {
-			String dbURL ="jdbc:mysql://localhost:3306/bbs";
+			String dbURL ="jdbc:mysql://localhost:3306/bbs?&serverTimezone=UTC&useSSL=false";
 			String dbID = "root";
 			String dbPassword = "alsrb1";
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			conn = DriverManager.getConnection(dbURL, dbID, dbPassword);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -40,5 +40,21 @@ public class UserDAO {
 			e.printStackTrace();
 		}
 		return -2; //데이터베이스 오류
+	}
+	
+	public int join(User user) {
+		String SQL = "INSERT INTO user VALUES (?, ?, ?, ?, ?)";
+		try {
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, user.getUserID());
+			pstmt.setString(2, user.getUserPassword());
+			pstmt.setString(3, user.getUserName());
+			pstmt.setString(4, user.getUserGender());
+			pstmt.setString(5, user.getUserEmail());
+			return pstmt.executeUpdate();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
 	}
 }
